@@ -42,6 +42,8 @@ for bucket in s3.buckets.all():
 # get the client first
 s3_client = s3.meta.client
 
+# or alternatively
+#s3_client = boto3.client('s3')
 
 #%%
 
@@ -54,33 +56,42 @@ for bucket in bucket_list['Buckets']:
     print(bucket['Name'])
 
 
-#%%
-# delete the first bucket created with EC2 instance
-#s3_client.delete_bucket(Bucket='cseng-1374')
 
 #%%
 
-file_path = '../chris/Documents/Python Notebooks/Projects/GraphRecommender/netflix_titles.csv'
+file_path1 = '../chris/Documents/Python Notebooks/Projects/GraphRecommender/netflix_titles.csv'
+file_path2 = '../chris/Documents/Python Notebooks/Projects/FireProject/disaster_tweets.csv'
+file_list = [file_path1, file_path2]
+bucket = 'cseng-1374-tuxedo'
 
 # Upload final_report.csv with key 2019/final_report_01_01.csv
-s3_client.upload_file(Bucket='cseng-1374-tuxedo', 
+
+for file in file_list:
+    file_key = 'Q1374/' + str(str.split(file, '/')[-1])
+
+    s3_client.upload_file(Bucket=bucket, 
                # Set filename and key
-               Filename=file_path, 
-               Key='Q1374/netflix_tiles.csv')
+               Filename=file, 
+               Key=file_key)
 
 # Get object metadata and print it
-response = s3_client.head_object(Bucket='cseng-1374-tuxedo', 
-                       Key='Q1374/netflix_tiles.csv')
+#response = s3_client.head_object(Bucket='cseng-1374-tuxedo', 
+#                       Key='Q1374/netflix_tiles.csv')
 
 # Print the size of the uploaded object
-print(response['ContentLength'])
+#print(response['ContentLength'])
+
 
 #%%
 def del_by_filename(bucket, filename):
-    # get key referred by filename
-    object_summary = s3.ObjectSummary(bucket,filename)
-    print(object_summary)
-    #s3.Object('cseng-1374-tuxedo', 'Q1374/netflix_tiles.csv').delete()
+    response = s3.Object(bucket, filename).delete()
+    print(response)
 
 #%%
-del_by_filename('cseng-1374-tuxedo', file_path)
+del_by_filename(bucket, 'Q1374/netflix_titles.csv')
+
+
+
+
+
+
