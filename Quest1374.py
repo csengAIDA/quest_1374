@@ -60,3 +60,27 @@ for bucket in bucket_list['Buckets']:
 
 #%%
 
+file_path = '../chris/Documents/Python Notebooks/Projects/GraphRecommender/netflix_titles.csv'
+
+# Upload final_report.csv with key 2019/final_report_01_01.csv
+s3_client.upload_file(Bucket='cseng-1374-tuxedo', 
+               # Set filename and key
+               Filename=file_path, 
+               Key='Q1374/netflix_tiles.csv')
+
+# Get object metadata and print it
+response = s3_client.head_object(Bucket='cseng-1374-tuxedo', 
+                       Key='Q1374/netflix_tiles.csv')
+
+# Print the size of the uploaded object
+print(response['ContentLength'])
+
+#%%
+def del_by_filename(bucket, filename):
+    # get key referred by filename
+    object_summary = s3.ObjectSummary(bucket,filename)
+    print(object_summary)
+    #s3.Object('cseng-1374-tuxedo', 'Q1374/netflix_tiles.csv').delete()
+
+#%%
+del_by_filename('cseng-1374-tuxedo', file_path)
